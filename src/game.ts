@@ -1,47 +1,289 @@
 import 'phaser';
 
-export default class Demo extends Phaser.Scene
-{
-    constructor ()
+
+var numPlayers = 4;
+var players = [
     {
+        player: null,
+        TURBO_MULTIPLIER: 3,
+        HORIZONTAL_SPEED: 40,
+        VERTICAL_SPEED: 12,
+        GRAVITY: 50,
+        FULL_SPEED: 200,
+        SIDE_DECAY: 1.2,
+        DOWN_DECAY: 1.06,
+        JUMP_POWER: 1600,
+        LENGTH_OF_TAIL: 1000,
+        SPEED_OF_TAIL: 30,
+        cursorsWASD: null,
+        velocity: { x: 0, y: 0 },
+        flipFlop: { r: false, l: false, u: false, d: false },
+        turboFlipFlop: false,
+        turboMultiply: 0,
+        particles: null,
+        emitter: null,
+        keyboard: {
+            up: Phaser.Input.Keyboard.KeyCodes.W,
+            down: Phaser.Input.Keyboard.KeyCodes.S,
+            left: Phaser.Input.Keyboard.KeyCodes.A,
+            right: Phaser.Input.Keyboard.KeyCodes.D,
+            fast: Phaser.Input.Keyboard.KeyCodes.Z,
+            jump: Phaser.Input.Keyboard.KeyCodes.X,
+        },
+    },
+    {
+        player: null,
+        TURBO_MULTIPLIER: 3,
+        HORIZONTAL_SPEED: 40,
+        VERTICAL_SPEED: 12,
+        GRAVITY: 50,
+        FULL_SPEED: 200,
+        SIDE_DECAY: 1.2,
+        DOWN_DECAY: 1.06,
+        JUMP_POWER: 1600,
+        LENGTH_OF_TAIL: 1000,
+        SPEED_OF_TAIL: 30,
+        cursorsWASD: null,
+        velocity: { x: 0, y: 0 },
+        flipFlop: { r: false, l: false, u: false, d: false },
+        turboFlipFlop: false,
+        turboMultiply: 0,
+        particles: null,
+        emitter: null,
+        keyboard: {
+            up: Phaser.Input.Keyboard.KeyCodes.T,
+            down: Phaser.Input.Keyboard.KeyCodes.G,
+            left: Phaser.Input.Keyboard.KeyCodes.F,
+            right: Phaser.Input.Keyboard.KeyCodes.H,
+            fast: Phaser.Input.Keyboard.KeyCodes.V,
+            jump: Phaser.Input.Keyboard.KeyCodes.B,
+        },
+    },
+    {
+        player: null,
+        TURBO_MULTIPLIER: 3,
+        HORIZONTAL_SPEED: 40,
+        VERTICAL_SPEED: 12,
+        GRAVITY: 50,
+        FULL_SPEED: 200,
+        SIDE_DECAY: 1.2,
+        DOWN_DECAY: 1.06,
+        JUMP_POWER: 1600,
+        LENGTH_OF_TAIL: 1000,
+        SPEED_OF_TAIL: 30,
+        cursorsWASD: null,
+        velocity: { x: 0, y: 0 },
+        flipFlop: { r: false, l: false, u: false, d: false },
+        turboFlipFlop: false,
+        turboMultiply: 0,
+        particles: null,
+        emitter: null,
+        keyboard: {
+            up: Phaser.Input.Keyboard.KeyCodes.I,
+            down: Phaser.Input.Keyboard.KeyCodes.K,
+            left: Phaser.Input.Keyboard.KeyCodes.J,
+            right: Phaser.Input.Keyboard.KeyCodes.L,
+            fast: Phaser.Input.Keyboard.KeyCodes.O,
+            jump: Phaser.Input.Keyboard.KeyCodes.P,
+        },
+    },
+    {
+        player: null,
+        TURBO_MULTIPLIER: 3,
+        HORIZONTAL_SPEED: 40,
+        VERTICAL_SPEED: 12,
+        GRAVITY: 50,
+        FULL_SPEED: 200,
+        SIDE_DECAY: 1.2,
+        DOWN_DECAY: 1.06,
+        JUMP_POWER: 1600,
+        LENGTH_OF_TAIL: 1000,
+        SPEED_OF_TAIL: 30,
+        cursorsWASD: null,
+        velocity: { x: 0, y: 0 },
+        flipFlop: { r: false, l: false, u: false, d: false },
+        turboFlipFlop: false,
+        turboMultiply: 0,
+        particles: null,
+        emitter: null,
+        keyboard: {
+            up: Phaser.Input.Keyboard.KeyCodes.UP,
+            down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+            left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+            right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+            fast: Phaser.Input.Keyboard.KeyCodes.END,
+            jump: Phaser.Input.Keyboard.KeyCodes.PAGE_DOWN,
+        },
+    },
+];
+
+export default class Demo extends Phaser.Scene {
+    constructor() {
         super('demo');
     }
 
-    preload ()
-    {
-        this.load.image('logo', 'assets/phaser3-logo.png');
-        this.load.image('libs', 'assets/libs.png');
-        this.load.glsl('bundle', 'assets/plasma-bundle.glsl.js');
-        this.load.glsl('stars', 'assets/starfields.glsl.js');
+    preload() {
+        for (let i = 0; i < numPlayers; i++) {
+            this.load.image('character_' + i, 'character_' + i + '.png');
+            this.load.image('tail_' + i, 'tail_' + i + '.png');
+        }
     }
 
-    create ()
-    {
-        this.add.shader('RGB Shift Field', 0, 0, 800, 600).setOrigin(0);
+    create() {
+        players.forEach((p, i) => {
+            p.cursorsWASD = this.input.keyboard.addKeys(p.keyboard);
+            // p.cursorsARROWS = this.input.keyboard.createCursorKeys();
 
-        this.add.shader('Plasma', 0, 412, 800, 172).setOrigin(0);
+            p.particles = this.add.particles('tail_' + i);
+            p.emitter = p.particles.createEmitter({
+                speed: p.SPEED_OF_TAIL / 0.6,
+                scale: { start: 0.06, end: 0 },
+                lifespan: p.LENGTH_OF_TAIL,
+                blendMode: 'ADD',
+            });
+            p.player = this.physics.add.image(10, 10, 'character_' + i);
 
-        this.add.image(400, 300, 'libs');
+            p.player.setPosition(100 * i + 250, 50);
+            p.velocity.x = 1000 * i - 1500;
 
-        const logo = this.add.image(400, 70, 'logo');
-
-        this.tweens.add({
-            targets: logo,
-            y: 350,
-            duration: 1500,
-            ease: 'Sine.inOut',
-            yoyo: true,
-            repeat: -1
-        })
+            p.player.setCollideWorldBounds(true);
+            p.emitter.startFollow(p.player);
+        });
     }
+
+    update() {
+        this.updateVelocity();
+        this.updateSpeedWASD();
+        this.updateLeftRightFlipFlop();
+        this.udpateJumpFlipFlop();
+        this.updateTurbo();
+    }
+
+    updateVelocity = () => {
+        players.forEach((p, i) => {
+            p.player.setVelocityX(p.velocity.x);
+            p.player.setVelocityY(p.velocity.y);
+            p.velocity.x = p.velocity.x / p.SIDE_DECAY;
+            p.velocity.y = p.velocity.y / p.DOWN_DECAY + p.GRAVITY;
+        });
+    };
+
+    updateTurbo = () => {
+        players.forEach((p, i) => {
+            if (p.cursorsWASD.fast.isDown) {
+                p.turboFlipFlop = true;
+            } else {
+                p.turboFlipFlop = false;
+            }
+            p.turboMultiply = p.turboFlipFlop ? p.TURBO_MULTIPLIER : 1;
+        });
+    };
+    udpateJumpFlipFlop = () => {
+        players.forEach((p, i) => {
+            if (p.cursorsWASD.jump.isDown) {
+                if (p.flipFlop.u) {
+                    p.velocity.y = -p.JUMP_POWER;
+                    p.flipFlop.u = false;
+                }
+            }
+            if (p.cursorsWASD.jump.isUp) {
+                p.flipFlop.u = true;
+            }
+        });
+    };
+
+    updateLeftRightFlipFlop = () => {
+        players.forEach((p, i) => {
+            if (p.cursorsWASD.left.isDown) {
+                if (p.flipFlop.l) {
+                    p.velocity.x = -p.FULL_SPEED;
+                    p.flipFlop.l = false;
+                }
+            } else {
+                p.flipFlop.l = true;
+            }
+            if (p.cursorsWASD.right.isDown) {
+                if (p.flipFlop.r) {
+                    p.velocity.x = p.FULL_SPEED;
+                    p.flipFlop.r = false;
+                }
+            } else {
+                p.flipFlop.r = true;
+            }
+        });
+    };
+    updateSpeedWASD = () => {
+        players.forEach((p, i) => {
+            if (p.cursorsWASD.up.isDown) {
+                p.velocity.y -= p.VERTICAL_SPEED * p.turboMultiply;
+            }
+            if (p.cursorsWASD.down.isDown) {
+                p.velocity.y += p.VERTICAL_SPEED * p.turboMultiply;
+            }
+            if (p.cursorsWASD.left.isDown) {
+                p.velocity.x -= p.HORIZONTAL_SPEED * p.turboMultiply;
+            }
+            if (p.cursorsWASD.right.isDown) {
+                p.velocity.x += p.HORIZONTAL_SPEED * p.turboMultiply;
+            }
+        });
+    };
 }
 
 const config = {
+    scale: {
+        width: 800,
+        height: 400,
+    },
+    pixelArt: false,
     type: Phaser.AUTO,
-    backgroundColor: '#125555',
-    width: 800,
-    height: 600,
-    scene: Demo
+    parent: 'yourgamediv',
+    backgroundColor: '#0072bc',
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false,
+        },
+    },
+    scene: Demo,
 };
 
 const game = new Phaser.Game(config);
+
+const onClickHandler = () => {
+    console.log('CLICK');
+};
+
+const c = document.getElementById('controls');
+
+let htmlString = '';
+
+players.forEach((p, i) => {
+    if (i === 3) {
+        htmlString += `
+        <ul class="created">
+            <li>P${i + 1}<li>
+            <li>&nbsp;&nbsp;&nbsp;UP: UP</li>
+            <li>&nbsp;DOWN: DOWN</li>
+            <li>&nbsp;LEFT: LEFT</li>
+            <li>RIGHT: RIGHT</li>
+            <li>&nbsp;FAST: END</li>
+            <li>&nbsp;JUMP: PAGEDOWN</li>
+        </ul>`;
+    } else {
+        htmlString += `
+    <ul class="created">
+    <li>P${i + 1}<li>
+    <li>&nbsp;&nbsp;&nbsp;UP: ${String.fromCharCode(p.keyboard.up)}</li>
+    <li>&nbsp;DOWN: ${String.fromCharCode(p.keyboard.down)}</li>
+    <li>&nbsp;LEFT: ${String.fromCharCode(p.keyboard.left)}</li>
+    <li>RIGHT: ${String.fromCharCode(p.keyboard.right)}</li>
+        <li>&nbsp;FAST: ${String.fromCharCode(p.keyboard.fast)}</li>
+        <li>&nbsp;JUMP: ${String.fromCharCode(p.keyboard.jump)}</li>
+    </ul>
+    `;
+    }
+});
+
+c.innerHTML = htmlString;

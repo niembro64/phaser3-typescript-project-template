@@ -1,0 +1,87 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    background-color: black;
+    color: white;
+    /* font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif; */
+    font-family: "Press Start 2P", cursive;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+}
+
+button {
+    margin: 10px;
+    width: 60px;
+    height: 60px;
+    font-size: x-large;
+    background-color: black;
+    color: white;
+}
+button > h1 {
+    background-color: transparent;
+    color: black;
+}
+
+ul {
+    list-style-type: none;
+    /* border: 5px dashed white; */
+    /* padding: 20px 40px; */
+    /* margin: 10px 70px; */
+    background-color: black;
+    color: white;
+    font-size: x-small;
+}
+
+h5 {
+    margin: 0px 0px 20px 0px;
+}
+.name-tag {
+    color: black;
+    padding: 10px;
+    background-color: black;
+    color: white;
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#controls {
+    width: 800px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    /* border: 1px dashed lime; */
+    margin: 10px 0px 0px 0px;
+}
+
+.created {
+    /* border: 1px dashed red; */
+    flex: 1;
+}
