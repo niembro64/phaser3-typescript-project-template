@@ -1,6 +1,5 @@
 import 'phaser';
 
-
 var numPlayers = 4;
 var players = [
     {
@@ -116,6 +115,7 @@ var players = [
         },
     },
 ];
+var platforms;
 
 export default class Demo extends Phaser.Scene {
     constructor() {
@@ -126,10 +126,13 @@ export default class Demo extends Phaser.Scene {
         for (let i = 0; i < numPlayers; i++) {
             this.load.image('character_' + i, 'character_' + i + '.png');
             this.load.image('tail_' + i, 'tail_' + i + '.png');
+            this.load.image('platform', 'platform.png');
         }
     }
 
     create() {
+        platforms = this.physics.add.staticGroup();
+        platforms.create(400, 300, 'platform').setScale(0.5).refreshBody();
         players.forEach((p, i) => {
             p.cursorsWASD = this.input.keyboard.addKeys(p.keyboard);
             // p.cursorsARROWS = this.input.keyboard.createCursorKeys();
@@ -141,13 +144,14 @@ export default class Demo extends Phaser.Scene {
                 lifespan: p.LENGTH_OF_TAIL,
                 blendMode: 'ADD',
             });
-            p.player = this.physics.add.image(10, 10, 'character_' + i);
+            p.player = this.physics.add.sprite(10, 10, 'character_' + i);
 
             p.player.setPosition(100 * i + 250, 50);
             p.velocity.x = 1000 * i - 1500;
 
             p.player.setCollideWorldBounds(true);
             p.emitter.startFollow(p.player);
+            this.physics.add.collider(p.player, platforms);
         });
     }
 
