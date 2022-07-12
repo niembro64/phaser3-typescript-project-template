@@ -1,9 +1,8 @@
-import 'phaser';
+import "phaser";
 
-var numPlayers = 4;
 var players = [
     {
-        player: null,
+        player_internal: null,
         TURBO_MULTIPLIER: 3,
         HORIZONTAL_SPEED: 40,
         VERTICAL_SPEED: 12,
@@ -14,6 +13,7 @@ var players = [
         JUMP_POWER: 1600,
         LENGTH_OF_TAIL: 1000,
         SPEED_OF_TAIL: 30,
+        standingPlatform: false,
         cursorsWASD: null,
         velocity: { x: 0, y: 0 },
         flipFlop: { r: false, l: false, u: false, d: false },
@@ -21,6 +21,7 @@ var players = [
         turboMultiply: 0,
         particles: null,
         emitter: null,
+        emitterManager: null,
         keyboard: {
             up: Phaser.Input.Keyboard.KeyCodes.W,
             down: Phaser.Input.Keyboard.KeyCodes.S,
@@ -31,7 +32,7 @@ var players = [
         },
     },
     {
-        player: null,
+        player_internal: null,
         TURBO_MULTIPLIER: 3,
         HORIZONTAL_SPEED: 40,
         VERTICAL_SPEED: 12,
@@ -41,6 +42,7 @@ var players = [
         DOWN_DECAY: 1.06,
         JUMP_POWER: 1600,
         LENGTH_OF_TAIL: 1000,
+        standingPlatform: false,
         SPEED_OF_TAIL: 30,
         cursorsWASD: null,
         velocity: { x: 0, y: 0 },
@@ -49,6 +51,7 @@ var players = [
         turboMultiply: 0,
         particles: null,
         emitter: null,
+        emitterManager: null,
         keyboard: {
             up: Phaser.Input.Keyboard.KeyCodes.T,
             down: Phaser.Input.Keyboard.KeyCodes.G,
@@ -59,7 +62,7 @@ var players = [
         },
     },
     {
-        player: null,
+        player_internal: null,
         TURBO_MULTIPLIER: 3,
         HORIZONTAL_SPEED: 40,
         VERTICAL_SPEED: 12,
@@ -70,6 +73,7 @@ var players = [
         JUMP_POWER: 1600,
         LENGTH_OF_TAIL: 1000,
         SPEED_OF_TAIL: 30,
+        standingPlatform: false,
         cursorsWASD: null,
         velocity: { x: 0, y: 0 },
         flipFlop: { r: false, l: false, u: false, d: false },
@@ -77,6 +81,7 @@ var players = [
         turboMultiply: 0,
         particles: null,
         emitter: null,
+        emitterManager: null,
         keyboard: {
             up: Phaser.Input.Keyboard.KeyCodes.I,
             down: Phaser.Input.Keyboard.KeyCodes.K,
@@ -87,7 +92,7 @@ var players = [
         },
     },
     {
-        player: null,
+        player_internal: null,
         TURBO_MULTIPLIER: 3,
         HORIZONTAL_SPEED: 40,
         VERTICAL_SPEED: 12,
@@ -98,6 +103,7 @@ var players = [
         JUMP_POWER: 1600,
         LENGTH_OF_TAIL: 1000,
         SPEED_OF_TAIL: 30,
+        standingPlatform: false,
         cursorsWASD: null,
         velocity: { x: 0, y: 0 },
         flipFlop: { r: false, l: false, u: false, d: false },
@@ -105,6 +111,7 @@ var players = [
         turboMultiply: 0,
         particles: null,
         emitter: null,
+        emitterManager: null,
         keyboard: {
             up: Phaser.Input.Keyboard.KeyCodes.UP,
             down: Phaser.Input.Keyboard.KeyCodes.DOWN,
@@ -115,45 +122,87 @@ var players = [
         },
     },
 ];
+
 var platforms;
 
 export default class Demo extends Phaser.Scene {
     constructor() {
-        super('demo');
+        super("demo");
     }
 
     preload() {
-        for (let i = 0; i < numPlayers; i++) {
-            this.load.image('character_' + i, 'character_' + i + '.png');
-            this.load.image('tail_' + i, 'tail_' + i + '.png');
-            this.load.image('platform', 'platform.png');
-        }
+        players.forEach((p, i) => {
+            this.load.image("character_" + i, "character_" + i + ".png");
+            this.load.image("tail_" + i, "tail_" + i + ".png");
+            this.load.image("platform", "platform.png");
+        });
     }
 
     create() {
+        var _this = this;
         platforms = this.physics.add.staticGroup();
-        platforms.create(400, 300, 'platform').setScale(0.5).refreshBody();
-        platforms.create(500, 200, 'platform').setScale(0.25, 0.5).refreshBody();
-        players.forEach((p, i) => {
-            p.cursorsWASD = this.input.keyboard.addKeys(p.keyboard);
+        platforms.create(400, 300, "platform").setScale(0.5).refreshBody();
+        platforms
+            .create(500, 200, "platform")
+            .setScale(0.25, 0.5)
+            .refreshBody();
+        players.forEach(function (p, i) {
+            p.cursorsWASD = _this.input.keyboard.addKeys(p.keyboard);
             // p.cursorsARROWS = this.input.keyboard.createCursorKeys();
-
-            p.particles = this.add.particles('tail_' + i);
+            p.particles = _this.add.particles("tail_" + i);
             p.emitter = p.particles.createEmitter({
-                speed: p.SPEED_OF_TAIL / 0.6,
+                speed: p.SPEED_OF_TAIL / 0.5,
+                // speed: { min: 0, max: p.SPEED_OF_TAIL / 1 },
                 scale: { start: 0.06, end: 0 },
+                alpha: { start: 1, end: 0.5 },
                 lifespan: p.LENGTH_OF_TAIL,
-                blendMode: 'ADD',
+                blendMode: "ADD",
+                // maxVelocityX: 70,
+                // maxVelocityY: 70,
+                // on: false,
+                // maxParticles: 300,
             });
-            p.player = this.physics.add.sprite(10, 10, 'character_' + i);
 
-            p.player.setPosition(100 * i + 250, 50);
+            p.player_internal = _this.physics.add.sprite(
+                10,
+                10,
+                "character_" + i
+            );
+            p.player_internal.setPosition(100 * i + 250, 50);
             p.velocity.x = 1000 * i - 1500;
-
-            p.player.setCollideWorldBounds(true);
-            p.emitter.startFollow(p.player);
-            this.physics.add.collider(p.player, platforms);
+            p.player_internal.setCollideWorldBounds(true);
+            p.emitter.startFollow(p.player_internal);
+            _this.physics.add.collider(p.player_internal, platforms);
         });
+
+        _this.input.on("pointerdown", function (pointer) {
+            console.log("pointer.x", pointer.x, "pointer.y", pointer.y);
+            players.forEach((p, i) => {
+                console.log("LOGGING", p.player_internal.body.transform);
+                // var shoot = this.shootVector(
+                //     p.player_internal.body.transform.x,
+                //     p.player_internal.body.transform.y
+                // );
+                // p.velocity.x -= shoot.x;
+                // p.velocity.y -= shoot.y;
+                p.velocity.x = -p.velocity.x;
+                p.velocity.y -= 1500;
+                p.emitter.on = p.emitter.on ? false : true;
+            });
+        });
+    }
+    center = { x: config.scale.width / 2, y: config.scale.height / 2 };
+    shootMultipler = 50000;
+    shootVector(x: any, y: any) {
+        var s = { x: 0, y: 0 };
+        var dx = x - this.center.x;
+        var dy = y - this.center.y;
+
+        var rad = Math.sqrt(dx * dx * +dy * dy);
+        s.x = ((x - this.center.x) / rad) * this.shootMultipler;
+        s.y = 1500;
+
+        return { x: s.x, y: s.y };
     }
 
     update() {
@@ -162,19 +211,34 @@ export default class Demo extends Phaser.Scene {
         this.updateLeftRightFlipFlop();
         this.udpateJumpFlipFlop();
         this.updateTurbo();
+        this.updateStanding();
     }
 
-    updateVelocity = () => {
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
+
+    updateStanding = () => {
         players.forEach((p, i) => {
-            p.player.setVelocityX(p.velocity.x);
-            p.player.setVelocityY(p.velocity.y);
+            if (p.player_internal.body.touching.down) {
+                p.standingPlatform = true;
+            } else {
+                p.standingPlatform = false;
+            }
+        });
+    };
+    updateVelocity = function () {
+        players.forEach(function (p, i) {
+            p.player_internal.setVelocityX(p.velocity.x);
+            p.player_internal.setVelocityY(p.velocity.y);
             p.velocity.x = p.velocity.x / p.SIDE_DECAY;
             p.velocity.y = p.velocity.y / p.DOWN_DECAY + p.GRAVITY;
         });
     };
-
-    updateTurbo = () => {
-        players.forEach((p, i) => {
+    updateTurbo = function () {
+        players.forEach(function (p, i) {
             if (p.cursorsWASD.fast.isDown) {
                 p.turboFlipFlop = true;
             } else {
@@ -233,6 +297,26 @@ export default class Demo extends Phaser.Scene {
             }
         });
     };
+
+    // onClickHandler = () => {
+    //     console.log("CLICK");
+
+    //     players.forEach((p, i) => {
+    //         console.log(
+    //             "CLICK HANDLER",
+    //             p.player_internal.body.transform.rotation
+    //         );
+
+    //         p.emitter.on = false;
+    //         console.log("LOGGING", p.player_internal.body.transform);
+    //         var shoot = this.shootVector(
+    //             p.player_internal.body.transform.x,
+    //             p.player_internal.body.transform.y
+    //         );
+    //         // p.velocity.x -= shoot.x;
+    //         p.velocity.y -= shoot.y;
+    //     });
+    // };
 }
 
 const config = {
@@ -242,10 +326,10 @@ const config = {
     },
     pixelArt: false,
     type: Phaser.AUTO,
-    parent: 'yourgamediv',
-    backgroundColor: '#0072bc',
+    parent: "yourgamediv",
+    backgroundColor: "#0072bc",
     physics: {
-        default: 'arcade',
+        default: "arcade",
         arcade: {
             gravity: { y: 300 },
             debug: false,
@@ -255,14 +339,28 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+// const D = new Demo();
 
-const onClickHandler = () => {
-    console.log('CLICK');
-};
+// const onClickHandler = () => {
+//     console.log("CLICK");
 
-const c = document.getElementById('controls');
+//     players.forEach((p, i) => {
+//         console.log("CLICK HANDLER", p.player_internal.body.transform.rotation);
 
-let htmlString = '';
+//         p.emitter.on = false;
+//         console.log("LOGGING", p.player_internal.body.transform);
+//         var shoot = D.shootVector(
+//             p.player_internal.body.transform.x,
+//             p.player_internal.body.transform.y
+//         );
+//         // p.velocity.x -= shoot.x;
+//         p.velocity.y -= shoot.y;
+//     });
+// };
+
+const c = document.getElementById("controls");
+
+let htmlString = "";
 
 players.forEach((p, i) => {
     if (i === 3) {
