@@ -133,6 +133,7 @@ export default class Demo extends Phaser.Scene {
     create() {
         platforms = this.physics.add.staticGroup();
         platforms.create(400, 300, 'platform').setScale(0.5).refreshBody();
+        platforms.create(500, 200, 'platform').setScale(0.25, 0.5).refreshBody();
         players.forEach((p, i) => {
             p.cursorsWASD = this.input.keyboard.addKeys(p.keyboard);
             // p.cursorsARROWS = this.input.keyboard.createCursorKeys();
