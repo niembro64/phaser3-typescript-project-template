@@ -1,9 +1,40 @@
 import "phaser";
 import { setUpPage } from "./page";
 
+export interface player {
+    player_internal: any;
+    TURBO_MULTIPLIER: number;
+    HORIZONTAL_SPEED: number;
+    VERTICAL_SPEED: number;
+    GRAVITY: number;
+    FULL_SPEED: number;
+    SIDE_DECAY: number;
+    DOWN_DECAY: number;
+    JUMP_POWER: number;
+    LENGTH_OF_TAIL: number;
+    SPEED_OF_TAIL: number;
+    standingPlatform: boolean;
+    cursorsWASD: any;
+    velocity: { x: number; y: number };
+    flipFlop: { r: boolean; l: boolean; u: boolean; d: boolean };
+    turboFlipFlop: boolean;
+    turboMultiply: number;
+    particles: any;
+    emitter: any;
+    emitterManager: any;
+    keyboard: {
+        up: any;
+        down: any;
+        left: any;
+        right: any;
+        fast: any;
+        jump: any;
+    };
+}
+
 var platforms;
 export default class Demo extends Phaser.Scene {
-    players: any = [
+    players: player[] = [
         {
             player_internal: null,
             TURBO_MULTIPLIER: 3,
