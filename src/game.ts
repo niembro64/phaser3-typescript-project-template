@@ -1,4 +1,12 @@
 import "phaser";
+import {
+    udpateJumpFlipFlop,
+    updateLeftRightFlipFlop,
+    updateSpeedWASD,
+    updateStanding,
+    updateTurbo,
+    updateVelocity,
+} from "./movement";
 import { setUpPage } from "./page";
 
 export interface player {
@@ -170,7 +178,7 @@ export default class Demo extends Phaser.Scene {
     }
 
     create() {
-        setUpPage(this.players);
+        setUpPage(this);
 
         var _this = this;
         platforms = this.physics.add.staticGroup();
@@ -239,117 +247,13 @@ export default class Demo extends Phaser.Scene {
     }
 
     update() {
-        this.updateVelocity();
-        this.updateSpeedWASD();
-        this.updateLeftRightFlipFlop();
-        this.udpateJumpFlipFlop();
-        this.updateTurbo();
-        this.updateStanding();
+        updateVelocity(this);
+        updateSpeedWASD(this);
+        updateLeftRightFlipFlop(this);
+        udpateJumpFlipFlop(this);
+        updateTurbo(this);
+        updateStanding(this);
     }
-
-    /////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////
-
-    updateStanding = () => {
-        this.players.forEach((p, i) => {
-            if (p.player_internal.body.touching.down) {
-                p.standingPlatform = true;
-            } else {
-                p.standingPlatform = false;
-            }
-        });
-    };
-    updateVelocity = function () {
-        this.players.forEach(function (p, i) {
-            p.player_internal.setVelocityX(p.velocity.x);
-            p.player_internal.setVelocityY(p.velocity.y);
-            p.velocity.x = p.velocity.x / p.SIDE_DECAY;
-            p.velocity.y = p.velocity.y / p.DOWN_DECAY + p.GRAVITY;
-        });
-    };
-    updateTurbo = function () {
-        this.players.forEach(function (p, i) {
-            if (p.cursorsWASD.fast.isDown) {
-                p.turboFlipFlop = true;
-            } else {
-                p.turboFlipFlop = false;
-            }
-            p.turboMultiply = p.turboFlipFlop ? p.TURBO_MULTIPLIER : 1;
-        });
-    };
-    udpateJumpFlipFlop = () => {
-        this.players.forEach((p, i) => {
-            if (p.cursorsWASD.jump.isDown) {
-                if (p.flipFlop.u) {
-                    p.velocity.y = -p.JUMP_POWER;
-                    p.flipFlop.u = false;
-                }
-            }
-            if (p.cursorsWASD.jump.isUp) {
-                p.flipFlop.u = true;
-            }
-        });
-    };
-
-    updateLeftRightFlipFlop = () => {
-        this.players.forEach((p, i) => {
-            if (p.cursorsWASD.left.isDown) {
-                if (p.flipFlop.l) {
-                    p.velocity.x = -p.FULL_SPEED;
-                    p.flipFlop.l = false;
-                }
-            } else {
-                p.flipFlop.l = true;
-            }
-            if (p.cursorsWASD.right.isDown) {
-                if (p.flipFlop.r) {
-                    p.velocity.x = p.FULL_SPEED;
-                    p.flipFlop.r = false;
-                }
-            } else {
-                p.flipFlop.r = true;
-            }
-        });
-    };
-    updateSpeedWASD = () => {
-        this.players.forEach((p, i) => {
-            if (p.cursorsWASD.up.isDown) {
-                p.velocity.y -= p.VERTICAL_SPEED * p.turboMultiply;
-            }
-            if (p.cursorsWASD.down.isDown) {
-                p.velocity.y += p.VERTICAL_SPEED * p.turboMultiply;
-            }
-            if (p.cursorsWASD.left.isDown) {
-                p.velocity.x -= p.HORIZONTAL_SPEED * p.turboMultiply;
-            }
-            if (p.cursorsWASD.right.isDown) {
-                p.velocity.x += p.HORIZONTAL_SPEED * p.turboMultiply;
-            }
-        });
-    };
-
-    // onClickHandler = () => {
-    //     console.log("CLICK");
-
-    //     players.forEach((p, i) => {
-    //         console.log(
-    //             "CLICK HANDLER",
-    //             p.player_internal.body.transform.rotation
-    //         );
-
-    //         p.emitter.on = false;
-    //         console.log("LOGGING", p.player_internal.body.transform);
-    //         var shoot = this.shootVector(
-    //             p.player_internal.body.transform.x,
-    //             p.player_internal.body.transform.y
-    //         );
-    //         // p.velocity.x -= shoot.x;
-    //         p.velocity.y -= shoot.y;
-    //     });
-    // };
 }
 
 const config = {
@@ -372,21 +276,3 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
-// const D = new Demo();
-
-// const onClickHandler = () => {
-//     console.log("CLICK");
-
-//     players.forEach((p, i) => {
-//         console.log("CLICK HANDLER", p.player_internal.body.transform.rotation);
-
-//         p.emitter.on = false;
-//         console.log("LOGGING", p.player_internal.body.transform);
-//         var shoot = D.shootVector(
-//             p.player_internal.body.transform.x,
-//             p.player_internal.body.transform.y
-//         );
-//         // p.velocity.x -= shoot.x;
-//         p.velocity.y -= shoot.y;
-//     });
-// };

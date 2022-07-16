@@ -1,8 +1,13 @@
-export function setUpPage(players: any) {
+import Demo from "./game";
+
+// test
+// test
+
+export function setUpPage(t: Demo) {
     const c = document.getElementById("controls");
     let htmlString = "";
 
-    players.forEach((p, i) => {
+    t.players.forEach((p, i) => {
         if (i === 3) {
             htmlString += `
             <ul class="created">
@@ -31,3 +36,16 @@ export function setUpPage(players: any) {
 
     c.innerHTML = htmlString;
 }
+
+// const onClickHandler = (players: player[]) => {
+//     console.log("CLICK");
+
+//     players.forEach((p, i) => {
+//         console.log("CLICK HANDLER", p.player_internal.body.transform.rotation);
+
+//         p.emitter.on = false;
+//         console.log("LOGGING", p.player_internal.body.transform);
+
+
+//     });
+// };
