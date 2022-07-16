@@ -1,137 +1,138 @@
 import "phaser";
 
-var players = [
-    {
-        player_internal: null,
-        TURBO_MULTIPLIER: 3,
-        HORIZONTAL_SPEED: 40,
-        VERTICAL_SPEED: 12,
-        GRAVITY: 50,
-        FULL_SPEED: 200,
-        SIDE_DECAY: 1.2,
-        DOWN_DECAY: 1.06,
-        JUMP_POWER: 1600,
-        LENGTH_OF_TAIL: 1000,
-        SPEED_OF_TAIL: 30,
-        standingPlatform: false,
-        cursorsWASD: null,
-        velocity: { x: 0, y: 0 },
-        flipFlop: { r: false, l: false, u: false, d: false },
-        turboFlipFlop: false,
-        turboMultiply: 0,
-        particles: null,
-        emitter: null,
-        emitterManager: null,
-        keyboard: {
-            up: Phaser.Input.Keyboard.KeyCodes.W,
-            down: Phaser.Input.Keyboard.KeyCodes.S,
-            left: Phaser.Input.Keyboard.KeyCodes.A,
-            right: Phaser.Input.Keyboard.KeyCodes.D,
-            fast: Phaser.Input.Keyboard.KeyCodes.Z,
-            jump: Phaser.Input.Keyboard.KeyCodes.X,
-        },
-    },
-    {
-        player_internal: null,
-        TURBO_MULTIPLIER: 3,
-        HORIZONTAL_SPEED: 40,
-        VERTICAL_SPEED: 12,
-        GRAVITY: 50,
-        FULL_SPEED: 200,
-        SIDE_DECAY: 1.2,
-        DOWN_DECAY: 1.06,
-        JUMP_POWER: 1600,
-        LENGTH_OF_TAIL: 1000,
-        standingPlatform: false,
-        SPEED_OF_TAIL: 30,
-        cursorsWASD: null,
-        velocity: { x: 0, y: 0 },
-        flipFlop: { r: false, l: false, u: false, d: false },
-        turboFlipFlop: false,
-        turboMultiply: 0,
-        particles: null,
-        emitter: null,
-        emitterManager: null,
-        keyboard: {
-            up: Phaser.Input.Keyboard.KeyCodes.T,
-            down: Phaser.Input.Keyboard.KeyCodes.G,
-            left: Phaser.Input.Keyboard.KeyCodes.F,
-            right: Phaser.Input.Keyboard.KeyCodes.H,
-            fast: Phaser.Input.Keyboard.KeyCodes.V,
-            jump: Phaser.Input.Keyboard.KeyCodes.B,
-        },
-    },
-    {
-        player_internal: null,
-        TURBO_MULTIPLIER: 3,
-        HORIZONTAL_SPEED: 40,
-        VERTICAL_SPEED: 12,
-        GRAVITY: 50,
-        FULL_SPEED: 200,
-        SIDE_DECAY: 1.2,
-        DOWN_DECAY: 1.06,
-        JUMP_POWER: 1600,
-        LENGTH_OF_TAIL: 1000,
-        SPEED_OF_TAIL: 30,
-        standingPlatform: false,
-        cursorsWASD: null,
-        velocity: { x: 0, y: 0 },
-        flipFlop: { r: false, l: false, u: false, d: false },
-        turboFlipFlop: false,
-        turboMultiply: 0,
-        particles: null,
-        emitter: null,
-        emitterManager: null,
-        keyboard: {
-            up: Phaser.Input.Keyboard.KeyCodes.I,
-            down: Phaser.Input.Keyboard.KeyCodes.K,
-            left: Phaser.Input.Keyboard.KeyCodes.J,
-            right: Phaser.Input.Keyboard.KeyCodes.L,
-            fast: Phaser.Input.Keyboard.KeyCodes.O,
-            jump: Phaser.Input.Keyboard.KeyCodes.P,
-        },
-    },
-    {
-        player_internal: null,
-        TURBO_MULTIPLIER: 3,
-        HORIZONTAL_SPEED: 40,
-        VERTICAL_SPEED: 12,
-        GRAVITY: 50,
-        FULL_SPEED: 200,
-        SIDE_DECAY: 1.2,
-        DOWN_DECAY: 1.06,
-        JUMP_POWER: 1600,
-        LENGTH_OF_TAIL: 1000,
-        SPEED_OF_TAIL: 30,
-        standingPlatform: false,
-        cursorsWASD: null,
-        velocity: { x: 0, y: 0 },
-        flipFlop: { r: false, l: false, u: false, d: false },
-        turboFlipFlop: false,
-        turboMultiply: 0,
-        particles: null,
-        emitter: null,
-        emitterManager: null,
-        keyboard: {
-            up: Phaser.Input.Keyboard.KeyCodes.UP,
-            down: Phaser.Input.Keyboard.KeyCodes.DOWN,
-            left: Phaser.Input.Keyboard.KeyCodes.LEFT,
-            right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
-            fast: Phaser.Input.Keyboard.KeyCodes.END,
-            jump: Phaser.Input.Keyboard.KeyCodes.PAGE_DOWN,
-        },
-    },
-];
 
 var platforms;
 
 export default class Demo extends Phaser.Scene {
+    players: any = [
+        {
+            player_internal: null,
+            TURBO_MULTIPLIER: 3,
+            HORIZONTAL_SPEED: 40,
+            VERTICAL_SPEED: 12,
+            GRAVITY: 50,
+            FULL_SPEED: 200,
+            SIDE_DECAY: 1.2,
+            DOWN_DECAY: 1.06,
+            JUMP_POWER: 1600,
+            LENGTH_OF_TAIL: 1000,
+            SPEED_OF_TAIL: 30,
+            standingPlatform: false,
+            cursorsWASD: null,
+            velocity: { x: 0, y: 0 },
+            flipFlop: { r: false, l: false, u: false, d: false },
+            turboFlipFlop: false,
+            turboMultiply: 0,
+            particles: null,
+            emitter: null,
+            emitterManager: null,
+            keyboard: {
+                up: Phaser.Input.Keyboard.KeyCodes.W,
+                down: Phaser.Input.Keyboard.KeyCodes.S,
+                left: Phaser.Input.Keyboard.KeyCodes.A,
+                right: Phaser.Input.Keyboard.KeyCodes.D,
+                fast: Phaser.Input.Keyboard.KeyCodes.Z,
+                jump: Phaser.Input.Keyboard.KeyCodes.X,
+            },
+        },
+        {
+            player_internal: null,
+            TURBO_MULTIPLIER: 3,
+            HORIZONTAL_SPEED: 40,
+            VERTICAL_SPEED: 12,
+            GRAVITY: 50,
+            FULL_SPEED: 200,
+            SIDE_DECAY: 1.2,
+            DOWN_DECAY: 1.06,
+            JUMP_POWER: 1600,
+            LENGTH_OF_TAIL: 1000,
+            standingPlatform: false,
+            SPEED_OF_TAIL: 30,
+            cursorsWASD: null,
+            velocity: { x: 0, y: 0 },
+            flipFlop: { r: false, l: false, u: false, d: false },
+            turboFlipFlop: false,
+            turboMultiply: 0,
+            particles: null,
+            emitter: null,
+            emitterManager: null,
+            keyboard: {
+                up: Phaser.Input.Keyboard.KeyCodes.T,
+                down: Phaser.Input.Keyboard.KeyCodes.G,
+                left: Phaser.Input.Keyboard.KeyCodes.F,
+                right: Phaser.Input.Keyboard.KeyCodes.H,
+                fast: Phaser.Input.Keyboard.KeyCodes.V,
+                jump: Phaser.Input.Keyboard.KeyCodes.B,
+            },
+        },
+        {
+            player_internal: null,
+            TURBO_MULTIPLIER: 3,
+            HORIZONTAL_SPEED: 40,
+            VERTICAL_SPEED: 12,
+            GRAVITY: 50,
+            FULL_SPEED: 200,
+            SIDE_DECAY: 1.2,
+            DOWN_DECAY: 1.06,
+            JUMP_POWER: 1600,
+            LENGTH_OF_TAIL: 1000,
+            SPEED_OF_TAIL: 30,
+            standingPlatform: false,
+            cursorsWASD: null,
+            velocity: { x: 0, y: 0 },
+            flipFlop: { r: false, l: false, u: false, d: false },
+            turboFlipFlop: false,
+            turboMultiply: 0,
+            particles: null,
+            emitter: null,
+            emitterManager: null,
+            keyboard: {
+                up: Phaser.Input.Keyboard.KeyCodes.I,
+                down: Phaser.Input.Keyboard.KeyCodes.K,
+                left: Phaser.Input.Keyboard.KeyCodes.J,
+                right: Phaser.Input.Keyboard.KeyCodes.L,
+                fast: Phaser.Input.Keyboard.KeyCodes.O,
+                jump: Phaser.Input.Keyboard.KeyCodes.P,
+            },
+        },
+        {
+            player_internal: null,
+            TURBO_MULTIPLIER: 3,
+            HORIZONTAL_SPEED: 40,
+            VERTICAL_SPEED: 12,
+            GRAVITY: 50,
+            FULL_SPEED: 200,
+            SIDE_DECAY: 1.2,
+            DOWN_DECAY: 1.06,
+            JUMP_POWER: 1600,
+            LENGTH_OF_TAIL: 1000,
+            SPEED_OF_TAIL: 30,
+            standingPlatform: false,
+            cursorsWASD: null,
+            velocity: { x: 0, y: 0 },
+            flipFlop: { r: false, l: false, u: false, d: false },
+            turboFlipFlop: false,
+            turboMultiply: 0,
+            particles: null,
+            emitter: null,
+            emitterManager: null,
+            keyboard: {
+                up: Phaser.Input.Keyboard.KeyCodes.UP,
+                down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+                left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+                right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+                fast: Phaser.Input.Keyboard.KeyCodes.END,
+                jump: Phaser.Input.Keyboard.KeyCodes.PAGE_DOWN,
+            },
+        },
+    ];
+    
     constructor() {
         super("demo");
     }
 
     preload() {
-        players.forEach((p, i) => {
+        this.players.forEach((p, i) => {
             this.load.image("character_" + i, "character_" + i + ".png");
             this.load.image("tail_" + i, "tail_" + i + ".png");
             this.load.image("platform", "platform.png");
@@ -146,7 +147,7 @@ export default class Demo extends Phaser.Scene {
             .create(500, 200, "platform")
             .setScale(0.25, 0.5)
             .refreshBody();
-        players.forEach(function (p, i) {
+        this.players.forEach(function (p, i) {
             p.cursorsWASD = _this.input.keyboard.addKeys(p.keyboard);
             // p.cursorsARROWS = this.input.keyboard.createCursorKeys();
             p.particles = _this.add.particles("tail_" + i);
@@ -177,7 +178,7 @@ export default class Demo extends Phaser.Scene {
 
         _this.input.on("pointerdown", function (pointer) {
             console.log("pointer.x", pointer.x, "pointer.y", pointer.y);
-            players.forEach((p, i) => {
+            this.players.forEach((p, i) => {
                 console.log("LOGGING", p.player_internal.body.transform);
                 // var shoot = this.shootVector(
                 //     p.player_internal.body.transform.x,
@@ -221,7 +222,7 @@ export default class Demo extends Phaser.Scene {
     /////////////////////////////////////////////////////////////////
 
     updateStanding = () => {
-        players.forEach((p, i) => {
+        this.players.forEach((p, i) => {
             if (p.player_internal.body.touching.down) {
                 p.standingPlatform = true;
             } else {
@@ -230,7 +231,7 @@ export default class Demo extends Phaser.Scene {
         });
     };
     updateVelocity = function () {
-        players.forEach(function (p, i) {
+        this.players.forEach(function (p, i) {
             p.player_internal.setVelocityX(p.velocity.x);
             p.player_internal.setVelocityY(p.velocity.y);
             p.velocity.x = p.velocity.x / p.SIDE_DECAY;
@@ -238,7 +239,7 @@ export default class Demo extends Phaser.Scene {
         });
     };
     updateTurbo = function () {
-        players.forEach(function (p, i) {
+        this.players.forEach(function (p, i) {
             if (p.cursorsWASD.fast.isDown) {
                 p.turboFlipFlop = true;
             } else {
@@ -248,7 +249,7 @@ export default class Demo extends Phaser.Scene {
         });
     };
     udpateJumpFlipFlop = () => {
-        players.forEach((p, i) => {
+        this.players.forEach((p, i) => {
             if (p.cursorsWASD.jump.isDown) {
                 if (p.flipFlop.u) {
                     p.velocity.y = -p.JUMP_POWER;
@@ -262,7 +263,7 @@ export default class Demo extends Phaser.Scene {
     };
 
     updateLeftRightFlipFlop = () => {
-        players.forEach((p, i) => {
+        this.players.forEach((p, i) => {
             if (p.cursorsWASD.left.isDown) {
                 if (p.flipFlop.l) {
                     p.velocity.x = -p.FULL_SPEED;
@@ -282,7 +283,7 @@ export default class Demo extends Phaser.Scene {
         });
     };
     updateSpeedWASD = () => {
-        players.forEach((p, i) => {
+        this.players.forEach((p, i) => {
             if (p.cursorsWASD.up.isDown) {
                 p.velocity.y -= p.VERTICAL_SPEED * p.turboMultiply;
             }
@@ -362,7 +363,9 @@ const c = document.getElementById("controls");
 
 let htmlString = "";
 
-players.forEach((p, i) => {
+var d = new Demo(); 
+
+d.players.forEach((p, i) => {
     if (i === 3) {
         htmlString += `
         <ul class="created">
